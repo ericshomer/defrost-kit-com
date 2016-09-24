@@ -1,0 +1,86 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function tropo_drupal_menu() {
+  $items['admin/config/services/tropo-drupal'] = array(
+    'title' => 'Tropo Drupal Configuration',
+    'type' => MENU_NORMAL_ITEM,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('tropo_drupal_admin_form'),
+    'access arguments' => array('administer site configuration'),
+  );
+  
+  $items['tropo/incoming'] = array(
+    'title' => 'Tropo Incoming Message',
+    'type' => MENU_CALLBACK,
+    'access callback' => 'tropo_drupal_access',
+    'page callback' => 'tropo_drupal_incoming',
+    'delivery callback' => 'drupal_json_output',
+  );
+
+  return $items;
+}
+
+/**
+ * Tropo menu item access callback.
+ */
+function tropo_drupal_access() {
+  return TRUE;
+}
+
+/**
+ * Trop menu item page callback.
+ */
+function tropo_drupal_incoming() {
+  $input = file_get_contents("php://input");
+  if (empty($input)) {
+    return;
+  }
+  $input = drupal_json_decode($input);
+  $debug = variable_get('tropo_drupal_debug', FALSE);
+  if ($debug) {
+    watchdog('tropo_drupal', 'Incoming request: <pre>@req</pre>', array('@req' => print_r($input, TRUE)), WATCHDOG_DEBUG);
+  }
+  // Validate the token.
+   if ($input['session']['parameters']['token'] !== variable_get('tropo_drupal_token')) {
+    return drupal_access_denied();
+   }
+  $return = array(
+    'tropo' => array(
+      array('call' => array('to' => $input['session']['parameters']['number'])),
+      array('say' => array(array('value' => $input['session']['parameters']['message']))),
+    ),
+  );
+  if ($debug) {
+    watchdog('tropo_drupal', 'Outgoing response: <pre>@resp</pre>', array('@resp' => print_r($return, TRUE)), WATCHDOG_DEBUG);
+  }
+  return $return;
+}
+
+/**
+ * Configuration form callback.
+ */
+function tropo_drupal_admin_form($form, &$form_state) {
+  $form['tropo_drupal_token'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Voice Token'),
+    '#required' => TRUE,
+    '#default_value' => variable_get('tropo_drupal_token'),
+  );
+
+  $form['tropo_drupal_debug'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Debug'),
+    '#description' => t('Debug outgoing requests and incoming responses'),
+    '#default_value' => variable_get('tropo_drupal_debug', FALSE),
+  );
+
+  $form['incoming_url'] = array(
+    '#type' => 'markup',
+    '#markup' => '<h3>' . t('Script URL:') . '</h3>' . url('tropo/incoming', array('absolute' => TRUE)),
+  );
+  
+  return system_settings_form($form);
+}

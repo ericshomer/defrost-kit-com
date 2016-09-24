@@ -1,0 +1,123 @@
+<?php
+
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Remove the password field when venue admin is creating a customer account. 
+ * default check notify user
+ * 
+ */
+
+function defrost_dependent_fields_form_user_register_form_alter(&$form, &$form_state, &$form_id) {
+  global $user;
+
+
+  if(in_array('venue administrator', $user->roles)) {
+    //hide password field
+    $form['account']['pass']['#access'] = FALSE;
+    $form['account']['pass']['#value']['pass1'] = user_password();
+    $form['account']['pass']['#value']['pass2'] = $form['account']['pass']['#value']['pass1'];
+    //enable notify by default
+    $form['account']['notify']['#default_value'] = TRUE;
+    //hide roles and status
+    $form['account']['roles']['#access'] = FALSE;
+    $form['account']['status']['#access'] = FALSE;
+    //make the generate access code required...
+    $form['account']['access_code_settings']['access_code']['#required']= TRUE;
+  }
+  //remove form fields for Defrost Admins quick and dirty
+  if(in_array('Defrost Administrator', $user->roles)) {
+    //customer first name
+    $form['field_customer_first_name']['#access'] = FALSE;
+    //customer last name
+    $form['field_customer_last_name']['#access'] = FALSE;
+    //customer organization
+    $form['field_customer_organization']['#access'] = FALSE;
+    //primary phone and change to not required
+    $form['field_primary_phone']['#access'] = FALSE;
+    //Event Date
+    $form['field_event_date']['#access'] = FALSE;
+    //Venue where meeting will take place needs to get changed to Name of hotel for whom this User represents as well as the help text.
+    $form['field_venue_hotel_term']['und']['#title'] = t('Name of venue for whom this user represents.');
+    $form['field_venue_hotel_term']['und']['#description'] = t('Please type the name of the venue. Wait for the name to autocomplete and select the venue.');
+    //hide access code
+    $form['account']['access_code_settings']['#access'] = FALSE;
+    //hide roles
+    $form['account']['roles']['#access'] = FALSE;
+    //We're hiding Terms AND conditions as well but not in this hook since another module (legal) provides this field. See hook_pre_process which adds a class to the body and we hide it with css. 
+    
+  }
+}
+
+/**
+ * Implements hook_user_presave
+ */
+  function defrost_dependent_fields_user_presave(&$edit, $account, $category) {
+    global $user;
+    if(isset($account -> is_new) && !empty($account -> is_new)) {
+       $roles = user_roles(TRUE);
+          if(in_array('Defrost Administrator', $user->roles)) {
+            //when the Defrost Admin is creating a new user the default value they create is a venue admin
+            $rid = array_search('venue administrator', $roles);
+            $role = user_role_load_by_name('venue administrator');
+            $edit['roles'][$rid] = 1;
+          }
+          if(in_array('venue administrator', $user->roles)) {
+           //set user they are creating to the role of 'customer'
+            $rid = array_search('Venue Customer', $roles);
+            $role = user_role_load_by_name('Venue Customer');
+            $edit['roles'][$rid] = 1;
+          }
+    }
+}
+
+/**
+ *
+ * Implements hook_pre_process.
+ * Adss a class with the name of the role to the body field to add selct styles for different users
+ *
+ */
+
+function defrost_dependent_fields_preprocess_html(&$vars){
+  $body_classes = array($vars['classes_array']);
+    if($vars['user']) {
+      foreach ($vars['user']->roles as $key => $role) {
+        $role_class = 'role-' . str_replace(' ', '-', $role);
+        $vars['classes_array'][] = $role_class;
+      }
+    }
+}
+
+/**
+ * Implements hook_form_alter.
+ * For the off-chance when a Defrost Admin needs to update a user information, they can without having to enter information that they don't need
+ */
+
+function defrost_dependent_fields_form_alter(&$form, $form_state, $form_id) {
+  global $user;
+  //remove form fields for Defrost Admins quick and dirty
+  if ($form_id === 'user_profile_form' ) {
+    if(in_array('Defrost Administrator', $user->roles)) {
+      //customer first name
+      $form['field_customer_first_name']['#access'] = FALSE;
+      //customer last name
+      $form['field_customer_last_name']['#access'] = FALSE;
+      //customer organization
+      $form['field_customer_organization']['#access'] = FALSE;
+      //primary phone and change to not required
+      $form['field_primary_phone']['#access'] = FALSE;
+      //Event Date
+      $form['field_event_date']['#access'] = FALSE;
+      //Venue where meeting will take place needs to get changed to Name of hotel for whom this User represents as well as the help text.
+      $form['field_venue_hotel_term']['und']['#title'] = t('Name of venue for whom this user represents.');
+      $form['field_venue_hotel_term']['und']['#description'] = t('Please type the name of the venue. Wait for the name to autocomplete and select the venue.');
+      //hide access code
+      $form['account']['access_code_settings']['#access'] = FALSE;
+      //hide roles
+      $form['account']['roles']['#access'] = FALSE;
+      //We're hiding Terms AND conditions as well but not in this hook since another module (legal) provides this field. See hook_pre_process which adds a class to the body and we hide it with css. 
+    }
+  }
+} 

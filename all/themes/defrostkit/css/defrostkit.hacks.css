@@ -1,0 +1,25 @@
+@media all and (max-width: 800px) {
+  /* line 3, ../sass/defrostkit.hacks.scss */
+  #toolbar, #admin-menu {
+    display: none; }
+
+  /* line 8, ../sass/defrostkit.hacks.scss */
+  html body.toolbar, html body.admin-menu {
+    padding-top: 0 !important;
+    margin-top: 0 !important; } }
+/* line 17, ../sass/defrostkit.hacks.scss */
+.video-wrapper {
+  position: relative;
+  padding-bottom: 52.25%;
+  padding-top: 30px;
+  height: 0;
+  overflow: hidden; }
+  /* line 23, ../sass/defrostkit.hacks.scss */
+  .video-wrapper iframe, .video-wrapper object, .video-wrapper embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; }
+
+/*# sourceMappingURL=defrostkit.hacks.css.map */

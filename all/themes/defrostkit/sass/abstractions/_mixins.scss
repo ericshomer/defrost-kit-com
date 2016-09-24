@@ -1,0 +1,24 @@
+/******************************************************************************/
+/*																			  */
+/*					----  Mixins  ----								          */
+/*																			  */
+/******************************************************************************/
+
+@mixin border-radius($radius) {
+	-webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+    -ms-border-radius: $radius;
+    border-radius: $radius;
+}
+
+@mixin ctaBtn {
+	background-color: $accentPink;
+	font-family: 'Lato-SemiboldItalic',  sans-serif;
+	padding: 10px 13px;
+	color: #ffffff;
+	text-transform: uppercase;
+	text-decoration: none;
+	-webkit-font-smoothing: antialiased;
+	transition:0.4s;
+
+}

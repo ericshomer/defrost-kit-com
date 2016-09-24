@@ -1,0 +1,81 @@
+// Import external libraries.
+@import "compass";
+@import "breakpoint";
+@import "singularitygs";
+@import "toolkit";
+
+// Import variables, abstractions, base styles and components using globbing.
+//
+// Globbing will always import files alphabetically. Optimally, all your
+// components should be self-contained and explicit enough to not have any
+// contained styles leak into unrelated components: The import order should not
+// affect the result.
+//
+// If there are variables, functions or mixins that depend on each other and
+// therefore need to be imported in a specific order you can import them
+// directly. Variables-, function- or mixin providing partials should never
+// output any styles themselves: Importing them multiple times to resolve
+// dependencies shouldn't be a problem.
+@import "variables/**/*";
+@import "abstractions/**/*";
+@import "base/**/*";
+@import "components/**/*";
+
+body {
+	font-size: 16px;
+	font-family: 'Merriweather', Palatino, Georgia, serif;
+}
+
+.section-about-defrost-kit {
+	.l-main {
+		.l-content {
+			padding: 0;
+		}
+	}
+}
+
+
+.l-page {
+	width: 100%;
+	overflow-x: hidden;
+		.site-logo {
+			@include grid-span(2, 1);
+		}
+		h1 {
+		color: white;
+	    text-transform: uppercase;
+	    text-align:center;
+	    margin: 5%;
+	    padding: 5%;
+	    font-size:3em;
+	}
+}
+.l-main {
+	overflow:hidden;
+	padding: 0;
+	background-image: url('../images/defrost-pattern.png');
+
+	.l-content {
+		@include grid-span(10,2);
+		min-height: 548px;
+		background: #FFFFFF;
+		padding: 3%;
+		section {
+			padding: 5%;
+			text-align:center;
+			font-size: 2em;
+			line-height: 1.5em;
+			color: $secondaryBlue;
+
+		}
+		section:nth-of-type(even) {
+			background-color:$defrostBlue;
+			font-family: 'LatoWebBold', serif;
+			color: #caebf2;
+		}
+	}
+}
+
+.l-region--footer {
+	clear: both;
+}

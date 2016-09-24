@@ -1,0 +1,3 @@
+name = Defrost Dependent Fields
+description = Enables / Disables custom fields based on role
+core = 7.x

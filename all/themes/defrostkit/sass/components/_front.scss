@@ -1,0 +1,122 @@
+.front {
+	.l-main {
+		.l-content {
+			width: 100%;
+			margin: 0;
+			padding: 0;
+			.panels-flexible-row{ padding:0;}
+			.panels-flexible-region-1-what_is_it,.panels-flexible-region-1-center {
+				width: 50%;
+				position: relative;
+				height:auto;
+				overflow: hidden;
+				float:left;
+				.panels-flexible-region-inside {
+					padding: 0;
+					.view-homepage-callout-beans {
+						.overlay {
+							z-index: 1;
+						    transition: opacity 0.3s;
+						    opacity: 0;
+						    pointer-events: none;
+						    position: absolute;
+						    top: 0;
+						    bottom: 4px;
+						    left: 0;
+						    right: 0;
+						    background: #000;
+						}
+					h2 {
+						position: absolute;		 
+					    left: 50px;
+					    top: 50px;
+					    color: White;
+					    text-transform: uppercase;
+					    font-size: 3.9em;
+					    text-shadow: 1px 1px 1px #333;
+					    z-index: 5;
+					}
+					.call-to-action {
+						z-index: 4;
+					    transition: all 0.3s;
+					    position: absolute;
+					    bottom: 40px;
+					    left: 0;
+					    margin: 0 60px;
+					    opacity: 0;
+					    color: #fff;
+					    font-size: 1.5em;
+					    .cta {
+					    	a {
+					    		@include ctaBtn;
+					    		@include border-radius(3px);
+					    		cursor: pointer;
+					    		&:hover {background-color: $accentShade;}
+					    	}
+					    }
+					}
+					.hoverClass {
+					    opacity: 1;
+					    bottom: 170px;
+					}
+				 }
+				}
+			}
+			//Defrost the meeting the de-icer section
+			.panels-flexible-row-1-1 {
+				background-color: $defrostBlue;
+				position:relative;
+				top: -4px;
+				padding: 1.18em;
+				h2 {
+					color: #ffffff;
+					font-family: 'LatoWebHairline', serif;
+					text-align: center;
+					font-size: 2.9em;
+    				letter-spacing: 0.05em;
+				}
+				.bean-homepage-cta-blocks {
+					padding: 1.5em;
+					ul.mini-float {
+						list-style-type: none;
+					    float: left;
+					    width: 24%;
+					    color: #FFFFFF;
+					    font-size: 1.2em;
+					    margin: 1.9em 2.5em;
+					}
+					.field--call-to-action-button {
+						clear:both;
+						text-align: center;
+						a {
+							@include ctaBtn;
+							@include border-radius(3px);
+							&:hover {background-color: $accentShade;}
+						}
+					}
+				}
+			}
+			.panels-testimonials {
+				background-color: $secondaryGrey;
+				position:relative;
+				top: -4px;
+				padding: 1.18em;
+				.view-defrost-testimonials{
+					font-family: 'Merriweather Light Italic', Palatino, Georgia, serif;
+					color:#777777;
+				    font-size: 1.2em;
+				    line-height: 2.1em;
+				    text-align: center;
+				}
+				.views-field-field-customer-providing-testimo {
+					text-align:right;
+				}
+				a.defrostButton {
+					  @include ctaBtn;
+					  @include border-radius(3px);
+						&:hover {background-color: $accentShade;}
+				}
+			}
+		}
+	}
+}
